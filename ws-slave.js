@@ -3,6 +3,7 @@ var events = require('events');
 
 var debug = require('debug')('blenoslave');
 var WebSocket = require('ws');
+var os = require('os');
 
 var bleno = require('./index');
 
@@ -101,6 +102,18 @@ var onMessage = function(message) {
     bleno.setServices(services);
   } else if (action === 'updateRssi') {
     bleno.updateRssi();
+  } else if (action === 'OSPlatform') {
+    console.log('received check platform');
+
+    var onPlatform = function(error, OSPlatform){
+      console.log('received platform response', OSPlatform);
+      sendEvent({
+        type: 'OSPlatform',
+        OSPlatform: OSPlatform
+      });
+    }
+
+    bleno.platform(onPlatform);
   }
 };
 
