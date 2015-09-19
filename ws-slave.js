@@ -103,10 +103,8 @@ var onMessage = function(message) {
   } else if (action === 'updateRssi') {
     bleno.updateRssi();
   } else if (action === 'OSPlatform') {
-    console.log('received check platform');
 
     var onPlatform = function(error, OSPlatform){
-      console.log('received platform response', OSPlatform);
       sendEvent({
         type: 'OSPlatform',
         OSPlatform: OSPlatform
