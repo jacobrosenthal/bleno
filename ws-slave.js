@@ -120,14 +120,14 @@ bleno.on('addressChange', function(clientAddress){
 bleno.on('advertisingStart', function(error){
   sendEvent({
     type: 'advertisingStart',
-    error: error
+    error: error ? error.message : undefined
   });
 });
 
 bleno.on('advertisingStartError', function(error){
   sendEvent({
     type: 'advertisingStartError',
-    error: error
+    error: error ? error.message : undefined
   });
 });
 
@@ -140,14 +140,14 @@ bleno.on('advertisingStop', function(){
 bleno.on('servicesSet', function(error){
   sendEvent({
     type: 'servicesSet',
-    error: error
+    error: error ? error.message : undefined
   });
 });
 
 bleno.on('servicesSetError', function(error){
   sendEvent({
     type: 'servicesSetError',
-    error: error
+    error: error ? error.message : undefined
   });
 });
 
