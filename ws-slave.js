@@ -124,13 +124,6 @@ bleno.on('advertisingStart', function(error){
   });
 });
 
-bleno.on('advertisingStartError', function(error){
-  sendEvent({
-    type: 'advertisingStartError',
-    error: error ? error.message : undefined
-  });
-});
-
 bleno.on('advertisingStop', function(){
   sendEvent({
     type: 'advertisingStop'
@@ -140,13 +133,6 @@ bleno.on('advertisingStop', function(){
 bleno.on('servicesSet', function(error){
   sendEvent({
     type: 'servicesSet',
-    error: error ? error.message : undefined
-  });
-});
-
-bleno.on('servicesSetError', function(error){
-  sendEvent({
-    type: 'servicesSetError',
     error: error ? error.message : undefined
   });
 });
