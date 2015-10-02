@@ -18,12 +18,6 @@ var bleno = require('../..');
 // })
 
 
-// var data = new Buffer(4); //how big?
-// data.writeUInt16(99, 0); //bcdHID
-// data.writeUInt8(0x00, 2); // dont know index bCountryCode
-// data.writeUInt8(0x00, 3); //flags
-
-
 
 // var outputReport = new bleno.Characteristic ({
 //     uuid: '2a32',
@@ -48,27 +42,43 @@ var bleno = require('../..');
 var hidInformation = new bleno.Characteristic ({
     uuid: '2a4a',
     properties: ['read'],
-    onReadRequest: function(a,b,c) { console.log('hidInformation onReadRequest', a,b,c); }
+    onReadRequest: function(offset, callback) {
+      console.log('hidInformation onReadRequest', offset);
+      var data = new Buffer(4);
+      data.writeUInt16(0x111, 0); //bcdHID
+      data.writeUInt8(0x00, 4); //bCountryCode
+      data.writeUInt8(0x00, 6); //bFlags
+      console.log(data);
+      callback(data);
+    }
 });
 
 var reportMap = new bleno.Characteristic ({
     uuid: '2a4b',
     properties: ['read'],
-    onReadRequest: function(a,b,c) { console.log('reportMap onReadRequest', a,b,c); }
+    onReadRequest: function(offset, callback) {
+      callback(new Buffer([0x00]));
+    }
 });
 
 var hidControlPoint = new bleno.Characteristic ({
     uuid: '0x2a4c',
     properties: ['writeWithoutResponse'],
-    onWriteRequest: function(a,b,c) { console.log('hidControlPoint onWriteRequest', a,b,c); }
+    onWriteRequest: function(data, offset, withoutResponse, callback) {
+      console.log('hidControlPoint onWriteRequest', data, offset, withoutResponse);
+    }
 });
 
 function HidService() {
     bleno.PrimaryService.call(this, {
         uuid: '1812',
         characteristics: [ hidInformation, reportMap, hidControlPoint ],
-        onReadRequest: function(a,b,c) { console.log('HidService onReadRequest', a,b,c); },
-        onWriteRequest: function(a,b,c) { console.log('HidService onWriteRequest', a,b,c); },
+        onReadRequest: function(offset, callback) {
+          console.log('HidService onReadRequest', offset);
+        },
+        onWriteRequest: function(data, offset, withoutResponse, callback) {
+          console.log('HidService onWriteRequest', data, offset, withoutResponse);
+        },
     });
 }
 
