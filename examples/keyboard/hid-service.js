@@ -2,14 +2,6 @@ var util = require('util');
 var bleno = require('../..');
 
 
-
-
-var reportMap = new bleno.Characteristic ({
-    uuid: '2a4b',
-    properties: ['read'],
-    value: new Buffer('??')
-})
-
 // var inputReport = new bleno.Characteristic ({
 //     uuid: '2a22',
 //     properties: ['read', 'notify'],
@@ -31,11 +23,7 @@ var reportMap = new bleno.Characteristic ({
 // data.writeUInt8(0x00, 2); // dont know index bCountryCode
 // data.writeUInt8(0x00, 3); //flags
 
-// var hidInformation = new bleno.Characteristic ({
-//     uuid: '2a4a',
-//     properties: ['read'],
-//     value: data
-// })
+
 
 // var outputReport = new bleno.Characteristic ({
 //     uuid: '2a32',
@@ -45,28 +33,42 @@ var reportMap = new bleno.Characteristic ({
 //     onReadRequest: function(a,b,c) { console.log('outputReport onReadRequest', a,b,c); }
 // })
 
+// var primaryCharacteristic = new bleno.Characteristic({
+//                         uuid: '1812',
+//                         properties: ['read', 'write', 'writeWithoutResponse', 'notify', 'indicate'],
+//                         characteristics: [
+//                           hidInformation, hidControlPoint, reportMap
+//                         ],
+//                         onReadRequest: function(a,b,c) { console.log('outputReport onReadRequest', a,b,c); },
+//                         onWriteRequest: function(a,b,c) { console.log('outputReport onWriteRequest', a,b,c); },
+//                       });
+
+
+
 var hidInformation = new bleno.Characteristic ({
+    uuid: '2a4a',
+    properties: ['read'],
+    onReadRequest: function(a,b,c) { console.log('hidInformation onReadRequest', a,b,c); }
+});
+
+var reportMap = new bleno.Characteristic ({
+    uuid: '2a4b',
+    properties: ['read'],
+    onReadRequest: function(a,b,c) { console.log('reportMap onReadRequest', a,b,c); }
+});
+
+var hidControlPoint = new bleno.Characteristic ({
     uuid: '0x2a4c',
     properties: ['writeWithoutResponse'],
-    onWriteRequest: function(a,b,c) { console.log('hidInformation onWriteRequest', a,b,c); }
-})
-
-var primaryCharacteristic = new bleno.Characteristic({
-                        uuid: '1812',
-                        properties: ['read', 'write', 'writeWithoutResponse', 'notify', 'indicate'],
-                        characteristics: [
-                          hidInformation
-                        ],
-                        onReadRequest: function(a,b,c) { console.log('outputReport onReadRequest', a,b,c); },
-                        onWriteRequest: function(a,b,c) { console.log('outputReport onWriteRequest', a,b,c); },
-                      });
-
-
+    onWriteRequest: function(a,b,c) { console.log('hidControlPoint onWriteRequest', a,b,c); }
+});
 
 function HidService() {
     bleno.PrimaryService.call(this, {
-        uuid: 'fffffffffffffffffffffffffffffff0',
-        characteristics: [ primaryCharacteristic ]
+        uuid: '1812',
+        characteristics: [ hidInformation, reportMap, hidControlPoint ],
+        onReadRequest: function(a,b,c) { console.log('HidService onReadRequest', a,b,c); },
+        onWriteRequest: function(a,b,c) { console.log('HidService onWriteRequest', a,b,c); },
     });
 }
 
